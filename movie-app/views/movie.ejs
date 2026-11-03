@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+
+<a class="back" href="/movies">← Back to all movies</a>
+
+<article class="detail">
+  <div class="poster-wrap detail-poster">
+    <img src="<%= movie.posterUrl %>" alt="Poster of <%= movie.name %>"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="poster-fallback"><%= movie.name %></div>
+  </div>
+
+  <div class="detail-info">
+    <h1><%= movie.name %> <small>(<%= movie.releaseYear %>)</small></h1>
+    <p class="rating-big">★ <%= movie.rating.toFixed(1) %> <span>/ 10</span></p>
+    <p class="desc-big"><%= movie.description %></p>
+
+    <dl class="facts">
+      <dt>Movie ID</dt><dd><%= movie.movieId %></dd>
+      <dt>Director</dt><dd><%= movie.director %></dd>
+      <dt>Genre</dt><dd><a href="/movies?genre=<%= encodeURIComponent(movie.genre) %>"><%= movie.genre %></a></dd>
+      <dt>Language</dt><dd><%= movie.language %></dd>
+      <dt>Duration</dt><dd><%= Math.floor(movie.duration / 60) %>h <%= movie.duration % 60 %>m (<%= movie.duration %> min)</dd>
+      <dt>Release year</dt><dd><%= movie.releaseYear %></dd>
+    </dl>
+  </div>
+</article>
+
+<%- include('partials/footer') %>

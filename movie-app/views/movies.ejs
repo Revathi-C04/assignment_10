@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+
+<section class="toolbar">
+  <h1>Movies</h1>
+  <form class="filters" action="/movies" method="GET">
+    <input type="search" name="search" placeholder="Search by movie name…" value="<%= search %>" aria-label="Search movies by name">
+    <select name="genre" aria-label="Filter by genre">
+      <option value="">All genres</option>
+      <% genres.forEach(function (g) { %>
+        <option value="<%= g %>" <%= g === genre ? 'selected' : '' %>><%= g %></option>
+      <% }) %>
+    </select>
+    <button type="submit" class="btn">Search</button>
+    <% if (search || genre) { %>
+      <a class="btn btn-ghost" href="/movies">Clear</a>
+    <% } %>
+  </form>
+</section>
+
+<% if (totalCount === 0) { %>
+  <div class="notice">
+    <h2>No movies in the database yet</h2>
+    <p>Insert the sample data by running <code>npm run seed</code> in the project folder, then refresh this page.</p>
+  </div>
+<% } else if (movies.length === 0) { %>
+  <div class="notice">
+    <h2>No movies found</h2>
+    <p>
+      Nothing matched
+      <% if (search) { %>the name “<strong><%= search %></strong>”<% } %>
+      <% if (search && genre) { %> in <% } %>
+      <% if (genre) { %>the genre <strong><%= genre %></strong><% } %>.
+      Try a different search or <a href="/movies">clear the filters</a>.
+    </p>
+  </div>
+<% } else { %>
+  <p class="result-count">Showing <%= movies.length %> of <%= totalCount %> movie<%= totalCount === 1 ? '' : 's' %></p>
+
+  <div class="grid">
+    <% movies.forEach(function (m) { %>
+      <a class="card" href="/movies/<%= m.movieId %>">
+        <div class="poster-wrap">
+          <img src="<%= m.posterUrl %>" alt="Poster of <%= m.name %>" loading="lazy"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="poster-fallback"><%= m.name %></div>
+          <span class="rating">★ <%= m.rating.toFixed(1) %></span>
+        </div>
+        <div class="card-body">
+          <h2><%= m.name %></h2>
+          <p class="meta"><%= m.releaseYear %> · <%= m.genre %> · <%= m.language %></p>
+          <p class="meta">Directed by <%= m.director %></p>
+          <p class="meta"><%= Math.floor(m.duration / 60) %>h <%= m.duration % 60 %>m</p>
+          <p class="desc"><%= m.description %></p>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>
